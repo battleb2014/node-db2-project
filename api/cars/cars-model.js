@@ -5,7 +5,7 @@ const getAll = () => {
 }
 
 const getById = id => {
-  return db('cars').where('id', id).first();
+  return db('cars').where('car_id', id).first();
 }
 
 const create = async car => {
@@ -14,12 +14,12 @@ const create = async car => {
 }
 
 const update = async (id, car) => {
-  await db('cars').where('id', id).update(car);
+  await db('cars').where('car_id', id).update(car);
   return getById(id);
 }
 
 const remove = id => {
-  return db('cars').where('id', id).del();
+  return db('cars').where('car_id', id).del();
 }
 
 module.exports = {

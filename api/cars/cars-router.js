@@ -10,30 +10,38 @@ router.get('/', (req, res, next) => {
         })
         .catch(next)
 })
-router.get('/:id', (req, res, next) => {
+router.get('/:id', mw.checkCarId, async (req, res, next) => {
     try {
-
+        const car = await Cars.getById(req.params.id);
+        res.json(car)
     } catch (err) {
         next(err)
     }
 })
-router.post('/', (req, res, next) => {
+router.post('/', 
+mw.checkCarPayload, 
+mw.checkVinNumberUnique, 
+mw.checkVinNumberValid, 
+async (req, res, next) => {
     try {
-
+        const newCar = await Cars.create(req.body);
+        res.json(newCar)
     } catch (err) {
         next(err)
     }
 })
-router.put('/:id', (req, res, next) => {
+router.put('/:id', mw.checkCarId, mw.checkCarPayload, async (req, res, next) => {
     try {
-
+        const newCar = await Cars.update(req.params.id, req.body);
+        res.json(newCar); 
     } catch (err) {
         next(err)
     }
 })
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', mw.checkCarId, async (req, res, next) => {
     try {
-
+        const car = await Cars.remove(req.params.id);
+        res.json(car);
     } catch (err) {
         next(err)
     }
@@ -41,7 +49,8 @@ router.delete('/:id', (req, res, next) => {
 
 router.use((err, req, res, next) => {
     res.status(err.status || 500).json({
-        message: err.message
+        message: err.message,
+        stack: err.stack
     })
 })
 

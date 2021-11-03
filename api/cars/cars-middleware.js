@@ -4,7 +4,7 @@ const vinValidator = require('vin-validator');
 
 const checkCarId = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const {id} = req.params;
     const car = await Cars.getById(id);
     if(!car) {
       next({ status: 404, message: `car with id ${id} is not found` })
@@ -44,8 +44,8 @@ const checkVinNumberValid = (req, res, next) => {
 const checkVinNumberUnique = async (req, res, next) => {
   try {
     const existingVin = db('cars')
-      .where('vin', req.body.vin.trim().first())
-    if(existingVin) {
+      .where('vin', req.params.vin)
+    if(req.params.vin === existingVin) {
       next({ status: 400, message: `vin ${req.body.vin} already exists` })
     } else {
       next()
